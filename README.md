@@ -1,3 +1,3 @@
 # ansible-playbooks
 
-Some playbooks from different projects.
+Some playbooks for different projects.
