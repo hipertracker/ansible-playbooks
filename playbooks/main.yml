@@ -1,0 +1,20 @@
+---
+
+- name: Provision Docker
+  hosts: target_host
+  become: yes
+  become_user: root
+  remote_user: centos
+
+  vars_files:
+    - ../../group_vars/prod/docker.yaml
+
+  vars:
+      pip_install_packages:
+        - name: docker
+
+  roles:
+    - ../../roles/base
+    - geerlingguy.nodejs
+    - geerlingguy.pip
+    - geerlingguy.docker

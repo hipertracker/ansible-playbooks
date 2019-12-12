@@ -7,7 +7,7 @@
 - name: Bootstrap Python
   raw: test -e /usr/bin/python || (apt update && apt install -y python-minimal)
 
-- name: Bootstrap Ansible
+- name: Bootstrap Ansible for Ubuntu/Debian
   raw: apt-get update && apt-get install -y software-properties-common && apt-add-repository -y ppa:ansible/ansible && /usr/bin/apt-get update && /usr/bin/apt-get install -y ansible && /usr/bin/apt-get autoremove -y
 
 - name: Use standard SSH port

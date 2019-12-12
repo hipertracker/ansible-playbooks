@@ -1,0 +1,23 @@
+- name: Update all packages for CentOS
+  yum:
+    name: "*"
+    state: latest
+
+- pause:
+    seconds: 10
+
+- name: Reboot the server
+  shell: /sbin/shutdown -r +1
+  async: 0
+  poll: 0
+  tags:
+    - reboot_host
+
+- name: Wait for the server to reboot
+  wait_for_connection:
+    connect_timeout: 5
+    delay: 70
+    sleep: 5
+    timeout: 180
+  tags:
+    - reboot_host
