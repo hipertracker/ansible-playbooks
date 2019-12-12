@@ -1,0 +1,31 @@
+---
+
+- name: Create tmp folder
+  file:
+    path: "{{ homedir }}/tmp"
+    state: directory
+  tags:
+    - elixir
+
+- name: Add Erlang Solutions repo
+  get_url:
+    url: https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
+    dest: "{{ homedir }}/tmp/erlang-solutions_1.0_all.deb"
+  tags:
+    - elixir
+
+- name: Install Erlang Solutions
+  apt:
+    deb: "{{ homedir }}/tmp/erlang-solutions_1.0_all.deb"
+  tags:
+    - elixir
+
+- name: Install Erlang/OPT Platform and Elixir
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  loop:
+    - esl-erlang
+    - elixir
+  tags:
+    - elixir
