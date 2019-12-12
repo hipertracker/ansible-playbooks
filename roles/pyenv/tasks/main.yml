@@ -1,0 +1,45 @@
+---
+
+- name: Install Linux packages
+  become: yes
+  yum:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - zlib-devel
+    - bzip2
+    - bzip2-devel
+    - readline-devel
+    - sqlite
+    - sqlite-devel
+    - openssl-devel
+    - xz
+    - xz-devel
+    - libffi-devel
+    - findutils
+    - git
+  when: install_python|bool
+
+- name: Check out pyenv repo
+  git:
+    repo: https://github.com/pyenv/pyenv.git
+    dest: "{{ home_dir }}/.pyenv"
+  when: install_python|bool
+
+- name: Init pyenv
+  lineinfile:
+    path: "{{ home_dir }}/.zshrc"
+    state: present
+    line: "{{ item }}"
+  loop:
+    - export PYENV_ROOT="$HOME/.pyenv"
+    - export PATH="$PYENV_ROOT/bin:$PATH"
+    - eval "$(pyenv init -)"
+  when: install_python|bool
+
+- name: Install Python {{ python_version }} and make it global
+  command: "{{ home_dir }}/.pyenv/bin/pyenv {{ item }}"
+  loop:
+    - "install {{ python_version }}"
+    - "global {{ python_version }}"
+  when: install_python|bool

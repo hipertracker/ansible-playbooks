@@ -1,0 +1,9 @@
+---
+
+home_dir: /home/centos
+
+python_version: "3.8.0"
+
+install_python: false
+
+install_zsh: false
