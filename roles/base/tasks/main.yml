@@ -6,13 +6,52 @@
     state: present
     line: 'LC_ALL="en_US.UTF-8"'
 
-- name: Install base packages
-  apt:
+- name: Install CentOS packages
+  become: yes
+  yum:
     name: "{{ item }}"
+    state: latest
   loop:
-    - inotify-tools
-    - npm
+    - "@development"
+    - python-devel
+    - python-virtualenv
     - mc
+    - ansible
     - tmux
-    - git
+    - zlib-devel
+    - bzip2
+    - bzip2-devel
+    - readline-devel
+    - sqlite
+    - sqlite-devel
+    - openssl-devel
+    - xz
+    - xz-devel
+    - libffi-devel
+    - findutils
+    - telnet
     - lynx
+
+- name: Set the motd
+  become: yes
+  copy: src=files/motd.txt dest=/etc/motd
+  tags:
+    - motd
+
+- name: Find the latest container-selinux rpm package
+  become: yes
+  uri:
+    url: http://mirror.centos.org/centos/7/extras/x86_64/Packages/
+    return_content: yes
+  register: html
+
+- set_fact:
+    regex_pattern: 'href="(container-selinux-.+\.noarch\.rpm)"'
+
+- set_fact:
+    latest_version: "{{html.content | regex_findall(regex_pattern) | max}}"
+
+- name: Install latest container-selinux
+  become: yes
+  yum:
+    name: http://mirror.centos.org/centos/7/extras/x86_64/Packages/{{ latest_version }}
